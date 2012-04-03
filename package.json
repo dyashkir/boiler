@@ -5,6 +5,7 @@
       "express": "2.2.0",
       "hiredis": "",
       "redis":"",
-      "jade":""
+      "jade":"",
+      "pg":""
     }
 }

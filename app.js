@@ -26,17 +26,60 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+
+//connect to stuff
+var port = process.env.PORT;
+var redis;
+
+if (process.env.REDISTOGO_URL) {
+  //connecting to heroku redisToGo instance
+  var rtg = require('url').parse(process.env.REDISTOGO_URL);
+  redis = require('redis').createClient(rtg.port, rtg.hostname);
+  redis.auth(rtg.auth.split(':')[1]);
+
+}else{
+  redis = require('redis').createClient();
+}
+
+//postgre
+var pg = require('pg');
+var pgClient;
+var conString = 'tcp://@localhost/boiler';
+
+//error handling omitted
+pg.connect(conString, function(err, client) {
+  if (!err){
+    console.log('Connected to postgre');
+    pgClient = client;
+  }else{
+    console.log('could not connect to postgre ');
+    console.dir(err);
+  }
+});
+
 // Routes
 
 app.get('/', function(req, res){
-  res.render('index', {
-    title: 'Express'
-  });
+  res.send(404);
 });
 
-// Only listen on $ node app.js
+app.get('/ameals', function(req, res) {
+  var availableMeals = [
+        { mealName: "Standard (sandwich)", price: 0 },
+        { mealName: "Premium (lobster)", price: 34.95 },
+        { mealName: "Ultimate (whole zebra)", price: 290 }
+    ];    
+  res.send(JSON.stringify(availableMeals));
+});
+
+app.post('/reserve', function(req, res) {
+  var stuff = req.body;
+  console.log(JSON.stringify(stuff));
+  res.end();
+});
+
 
 if (!module.parent) {
-  app.listen(3000);
+  app.listen(port);
   console.log("Express server listening on port %d", app.address().port);
 }

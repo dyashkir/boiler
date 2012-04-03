@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <title>Some sortof title</title>
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link rel="shortcut icon" href="bootstrap/ico/favicon.ico">
+    <script src="javascripts/knockout-2.0.0.debug.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+  </head>
+  <body>
+    <h2>Your seat reservations (<span data-bind="text: seats().length"></span>)</h2>
+    <button data-bind="click: addSeat, enable:seats().length <5">Reserve another seat</button>
+
+    <table>
+      <thead><tr>
+        <th>Passenger name</th><th>Meal</th><th>Surcharge</th><th></th>
+        </tr>
+      </thead>
+        <tbody data-bind="foreach: seats">
+        <tr>
+            <td> <input data-bind="value: name"/></td>
+            <td> <select data-bind="options: $root.availableMeals(), value: meal, optionsText: 'mealName'"></select></td>
+            <td data-bind="text: formattedPrice"></td>
+            <td> <a href="#" data-bind="click: $root.removeSeat">Remove</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <h3 data-bind="visible: totalSurcharge() > 0">
+      Total surcharge: $<span data-bind="text: totalSurcharge().toFixed(2)"></span>
+    </h3>
+    <button data-bind="click: save">Save</button>
+    <script src="javascripts/boiler.js"></script>
+  </body>
+</html>
